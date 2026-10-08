@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ludo Controller</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; background: #222; color: #fff; }
+    h2 { margin-bottom: 20px; }
+    .btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 300px; margin: 0 auto; }
+    button { padding: 20px; font-size: 24px; font-weight: bold; border: none; border-radius: 8px; background: #ff9800; color: #fff; cursor: pointer; }
+    button:active { background: #e68a00; }
+    .reset { grid-column: span 3; background: #f44336; margin-top: 10px; }
+    #status { margin-top: 20px; font-size: 18px; color: #4caf50; }
+  </style>
+</head>
+<body>
+  <h2>Ludo Dice Controller</h2>
+  <div class="btn-grid">
+    <button onclick="setValue(1)">1</button>
+    <button onclick="setValue(2)">2</button>
+    <button onclick="setValue(3)">3</button>
+    <button onclick="setValue(4)">4</button>
+    <button onclick="setValue(5)">5</button>
+    <button onclick="setValue(6)">6</button>
+    <button class="reset" onclick="setValue(0)">Reset (Random)</button>
+  </div>
+  <div id="status">Current Value: Loading...</div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      databaseURL: "https://sahil-8ea6f-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function setValue(val) {
+      db.ref('game_control/forced_value').set(val);
+    }
+
+    db.ref('game_control/forced_value').on('value', (snapshot) => {
+      document.getElementById('status').innerText = "Current Value: " + (snapshot.val() ?? 0);
+    });
+  </script>
+</body>
+</html>
